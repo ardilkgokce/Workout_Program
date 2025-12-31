@@ -295,9 +295,11 @@
         .video-modal.show { display:flex; }
         .video-content { background:var(--bg-card); border-radius:16px; padding:20px; max-width:500px; width:100%; text-align:center; }
         .video-content h3 { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; margin-bottom:15px; }
-        .video-placeholder { background:rgba(255,255,255,0.05); border-radius:12px; padding:40px; margin-bottom:15px; }
-        .video-placeholder .icon { font-size:3rem; margin-bottom:10px; }
-        .video-placeholder p { font-size:0.85rem; color:var(--text2); }
+        .video-gif-container { background:rgba(255,255,255,0.05); border-radius:12px; padding:15px; margin-bottom:15px; min-height:200px; display:flex; align-items:center; justify-content:center; flex-direction:column; }
+        .video-gif { width:100%; max-width:280px; border-radius:10px; }
+        .video-gif-loading { color:var(--text3); font-size:0.85rem; }
+        .video-gif-error { color:var(--text3); font-size:0.85rem; text-align:center; }
+        .video-gif-error .icon { font-size:2.5rem; margin-bottom:8px; }
         .video-tips { text-align:left; background:rgba(255,255,255,0.03); border-radius:10px; padding:12px; }
         .video-tips h4 { font-size:0.85rem; color:var(--accent); margin-bottom:8px; }
         .video-tips ul { padding-left:16px; }
@@ -575,9 +577,8 @@
     <div class="video-modal" id="videoModal">
         <div class="video-content">
             <h3 id="videoTitle">Egzersiz</h3>
-            <div class="video-placeholder">
-                <div class="icon">🎬</div>
-                <p>Form videosu için YouTube'da ara</p>
+            <div class="video-gif-container" id="videoGifContainer">
+                <div class="video-gif-loading">Yükleniyor...</div>
             </div>
             <div class="video-tips" id="videoTips">
                 <h4>💡 Önemli Noktalar</h4>
@@ -1272,7 +1273,7 @@
             if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
         }
 
-        // ========== VIDEO TIPS ==========
+        // ========== VIDEO TIPS & GIFS ==========
         const exerciseTips = {
             'Dumbbell Floor Press': ['Sırtını yere yapıştır', 'Dirsekler 45° açıda', 'Kontrollü indir'],
             'Dumbbell Fly': ['Kolları hafif bükük tut', 'Göğsü sıkıştır', 'Yavaş indir'],
@@ -1295,10 +1296,53 @@
             'Dumbbell Shrug': ['Ağır kilo', 'Kulaklara çek', 'Tepede bekle']
         };
 
+        const exerciseGifs = {
+            'Dumbbell Floor Press': 'https://fitnessprogramer.com/wp-content/uploads/2021/06/Dumbbell-Floor-Press.gif',
+            'Dumbbell Fly': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Fly.gif',
+            'Shoulder Press': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif',
+            'Z-Bar Skullcrusher': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/EZ-Bar-Skullcrusher.gif',
+            'Lateral Raise': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif',
+            'Dumbbell Row': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Row.gif',
+            'Z-Bar Bent Row': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Bent-Over-Row.gif',
+            'Z-Bar Biceps Curl': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/EZ-Barbell-Curl.gif',
+            'Hammer Curl': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif',
+            'Rear Delt Fly': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Rear-Delt-Fly.gif',
+            'Goblet Squat': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Goblet-Squat.gif',
+            'Dumbbell Lunges': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lunges.gif',
+            'Romanian Deadlift': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Romanian-Deadlift.gif',
+            'Calf Raise': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Calf-Raise.gif',
+            'Plank & Leg Raise': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Front-Plank.gif',
+            'Z-Bar Upright Row': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Upright-Row.gif',
+            'Arnold Press': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Arnold-Press.gif',
+            'Close Grip Press': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Close-Grip-Dumbbell-Press.gif',
+            'Dumbbell Shrug': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shrug.gif'
+        };
+
         function openVideo(exerciseName) {
             document.getElementById('videoTitle').textContent = exerciseName;
             const tips = exerciseTips[exerciseName] || ['Form videosunu izle', 'Kontrollü hareket et', 'Hedef kası hisset'];
             document.getElementById('videoTipsList').innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+
+            const container = document.getElementById('videoGifContainer');
+            const gifUrl = exerciseGifs[exerciseName];
+
+            if (gifUrl) {
+                container.innerHTML = '<div class="video-gif-loading">Yükleniyor...</div>';
+                const img = document.createElement('img');
+                img.className = 'video-gif';
+                img.alt = exerciseName;
+                img.onload = () => {
+                    container.innerHTML = '';
+                    container.appendChild(img);
+                };
+                img.onerror = () => {
+                    container.innerHTML = `<div class="video-gif-error"><div class="icon">🎬</div><p>GIF yüklenemedi<br><small>YouTube'da "${exerciseName}" ara</small></p></div>`;
+                };
+                img.src = gifUrl;
+            } else {
+                container.innerHTML = `<div class="video-gif-error"><div class="icon">🎬</div><p>YouTube'da "${exerciseName}" ara</p></div>`;
+            }
+
             document.getElementById('videoModal').classList.add('show');
         }
 
