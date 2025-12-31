@@ -267,6 +267,11 @@
         .quick-adds { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
         .quick-add { padding:4px 10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px; font-size:0.7rem; color:var(--text2); cursor:pointer; }
         .quick-add:active { background:var(--accent); color:#fff; }
+        .macro-actions { display:flex; gap:6px; margin-top:10px; }
+        .macro-undo { padding:5px 10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:var(--text2); font-size:0.7rem; cursor:pointer; }
+        .macro-undo:active { background:var(--accent); color:#fff; }
+        .macro-reset { padding:5px 10px; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:6px; color:#ef4444; font-size:0.7rem; cursor:pointer; }
+        .macro-reset:active { background:#ef4444; color:#fff; }
 
         /* Notes */
         .notes-section { margin-top:20px; }
@@ -429,6 +434,10 @@
                         <span class="quick-add" onclick="quickAdd('prot',12)">🧀 +12g</span>
                         <span class="quick-add" onclick="quickAdd('prot',30)">🥤 +30g</span>
                     </div>
+                    <div class="macro-actions">
+                        <button class="macro-undo" onclick="undoMacro('prot')">↩ Geri Al</button>
+                        <button class="macro-reset" onclick="resetMacro('prot')">🗑 Sıfırla</button>
+                    </div>
                 </div>
                 <div class="nutcard">
                     <h4>🍚 Karbonhidrat (350g)</h4>
@@ -444,6 +453,10 @@
                         <span class="quick-add" onclick="quickAdd('carb',45)">🍚 +45g</span>
                         <span class="quick-add" onclick="quickAdd('carb',50)">🍝 +50g</span>
                         <span class="quick-add" onclick="quickAdd('carb',35)">🥔 +35g</span>
+                    </div>
+                    <div class="macro-actions">
+                        <button class="macro-undo" onclick="undoMacro('carb')">↩ Geri Al</button>
+                        <button class="macro-reset" onclick="resetMacro('carb')">🗑 Sıfırla</button>
                     </div>
                 </div>
                 <div class="nutcard">
@@ -1038,6 +1051,7 @@
 
         // ========== MACRO TRACKING ==========
         let macros = { prot: 0, carb: 0 };
+        let macroHistory = { prot: [], carb: [] };
 
         function initMacros() {
             const saved = S.get('fm_' + today());
@@ -1047,12 +1061,19 @@
                     updateMacroUI();
                 } catch(e) {}
             }
+            const histSaved = S.get('fmh_' + today());
+            if (histSaved) {
+                try {
+                    macroHistory = JSON.parse(histSaved);
+                } catch(e) {}
+            }
         }
 
         function addMacro(type, max) {
             const input = document.getElementById(type + 'Input');
             const val = parseInt(input.value) || 0;
             if (val > 0) {
+                macroHistory[type].push(val);
                 macros[type] = Math.min((macros[type] || 0) + val, max * 2);
                 input.value = '';
                 saveMacros();
@@ -1063,14 +1084,36 @@
 
         function quickAdd(type, amount) {
             const max = type === 'prot' ? 120 : 350;
+            macroHistory[type].push(amount);
             macros[type] = Math.min((macros[type] || 0) + amount, max * 2);
             saveMacros();
             updateMacroUI();
             toast(`+${amount}g eklendi!`);
         }
 
+        function undoMacro(type) {
+            if (macroHistory[type].length === 0) {
+                toast('⚠️ Geri alınacak işlem yok!');
+                return;
+            }
+            const lastVal = macroHistory[type].pop();
+            macros[type] = Math.max(0, (macros[type] || 0) - lastVal);
+            saveMacros();
+            updateMacroUI();
+            toast(`↩ ${lastVal}g geri alındı!`);
+        }
+
+        function resetMacro(type) {
+            macros[type] = 0;
+            macroHistory[type] = [];
+            saveMacros();
+            updateMacroUI();
+            toast(type === 'prot' ? '🗑 Protein sıfırlandı!' : '🗑 Karb sıfırlandı!');
+        }
+
         function saveMacros() {
             S.set('fm_' + today(), JSON.stringify(macros));
+            S.set('fmh_' + today(), JSON.stringify(macroHistory));
         }
 
         function updateMacroUI() {
