@@ -297,6 +297,7 @@
         .video-content h3 { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; margin-bottom:15px; }
         .video-gif-container { background:rgba(255,255,255,0.05); border-radius:12px; padding:15px; margin-bottom:15px; min-height:200px; display:flex; align-items:center; justify-content:center; flex-direction:column; }
         .video-gif { width:100%; max-width:280px; border-radius:10px; }
+        .video-embed { width:100%; aspect-ratio:16/9; border:none; border-radius:10px; }
         .video-gif-loading { color:var(--text3); font-size:0.85rem; }
         .video-gif-error { color:var(--text3); font-size:0.85rem; text-align:center; }
         .video-gif-error .icon { font-size:2.5rem; margin-bottom:8px; }
@@ -1296,26 +1297,27 @@
             'Dumbbell Shrug': ['Ağır kilo', 'Kulaklara çek', 'Tepede bekle']
         };
 
+        // GIF/PNG'ler (tüm egzersizler)
         const exerciseGifs = {
-            'Dumbbell Floor Press': 'https://www.inspireusafoundation.org/wp-content/uploads/2022/04/dumbbell-floor-press.gif',
+            'Dumbbell Floor Press': 'https://www.inspireusafoundation.org/file/2023/08/barbell-floor-press.gif',
             'Dumbbell Fly': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Fly.gif',
             'Shoulder Press': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif',
-            'Z-Bar Skullcrusher': 'https://www.inspireusafoundation.org/wp-content/uploads/2022/10/ez-bar-skull-crusher.gif',
+            'Z-Bar Skullcrusher': 'https://www.inspireusafoundation.org/file/2022/03/barbell-lying-skullcrusher.png',
             'Lateral Raise': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif',
             'Dumbbell Row': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Row.gif',
             'Z-Bar Bent Row': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Bent-Over-Row.gif',
-            'Z-Bar Biceps Curl': 'https://www.inspireusafoundation.org/wp-content/uploads/2022/08/ez-bar-curl.gif',
+            'Z-Bar Biceps Curl': 'https://www.inspireusafoundation.org/file/2023/02/ez-bar-bicep-curl.gif',
             'Hammer Curl': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif',
-            'Rear Delt Fly': 'https://www.inspireusafoundation.org/wp-content/uploads/2022/01/dumbbell-rear-delt-fly.gif',
-            'Goblet Squat': 'https://www.inspireusafoundation.org/wp-content/uploads/2021/10/goblet-squat-movement.gif',
-            'Dumbbell Lunges': 'https://www.inspireusafoundation.org/wp-content/uploads/2022/06/dumbbell-lunges.gif',
+            'Rear Delt Fly': 'https://www.inspireusafoundation.org/file/2021/11/dumbbell-rear-delt-fly.gif',
+            'Goblet Squat': 'https://www.inspireusafoundation.org/file/2023/08/kettlebell-goblet-squat-muscles.gif',
+            'Dumbbell Lunges': 'https://www.inspireusafoundation.org/file/2022/01/dumbbell-lunges.gif',
             'Romanian Deadlift': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Romanian-Deadlift.gif',
             'Calf Raise': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Calf-Raise.gif',
-            'Plank & Leg Raise': 'https://www.inspireusafoundation.org/wp-content/uploads/2023/09/forearm-plank.gif',
+            'Plank & Leg Raise': 'https://www.inspireusafoundation.org/file/2022/01/plank.gif',
             'Z-Bar Upright Row': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Upright-Row.gif',
             'Arnold Press': 'https://fitnessprogramer.com/wp-content/uploads/2021/02/Arnold-Press.gif',
-            'Close Grip Press': 'https://www.inspireusafoundation.org/wp-content/uploads/2022/11/close-grip-dumbbell-press.gif',
-            'Dumbbell Shrug': 'https://www.inspireusafoundation.org/wp-content/uploads/2022/02/dumbbell-shrug.gif'
+            'Close Grip Press': 'https://www.inspireusafoundation.org/file/2022/12/dumbbell-close-grip-press.gif',
+            'Dumbbell Shrug': 'https://www.inspireusafoundation.org/file/2021/11/dumbbell-shrug-steps-768x576.png'
         };
 
         function openVideo(exerciseName) {
@@ -1336,7 +1338,7 @@
                     container.appendChild(img);
                 };
                 img.onerror = () => {
-                    container.innerHTML = `<div class="video-gif-error"><div class="icon">🎬</div><p>GIF yüklenemedi<br><small>YouTube'da "${exerciseName}" ara</small></p></div>`;
+                    container.innerHTML = `<div class="video-gif-error"><div class="icon">🎬</div><p>Görsel yüklenemedi<br><small>YouTube'da "${exerciseName}" ara</small></p></div>`;
                 };
                 img.src = gifUrl;
             } else {
