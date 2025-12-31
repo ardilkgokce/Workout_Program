@@ -210,6 +210,12 @@
         .btn-save { background:var(--grad); color:#fff; }
         .btn-save:active { transform:scale(0.98); }
         .btn-cancel { background:rgba(255,255,255,0.1); color:var(--text); }
+
+        .date-picker-container { margin-top:10px; }
+        .date-input { width:100%; padding:12px; background:rgba(255,255,255,0.05); border:2px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text); font-family:'Outfit',sans-serif; font-size:0.95rem; cursor:pointer; }
+        .date-input:focus { outline:none; border-color:var(--accent); }
+        .date-input::-webkit-calendar-picker-indicator { filter:invert(1); cursor:pointer; }
+        .date-info { font-size:0.75rem; color:var(--text3); margin-top:8px; }
     </style>
 </head>
 <body>
@@ -333,28 +339,30 @@
             <div class="tipcard"><h4>🚀 2. AY: Hipertrofi</h4><p>Gaza bas!</p><ul><li><strong>Ağırlıkları artır!</strong></li><li>İndirirken 3 sn yavaş</li><li>Son 2 tekrar zorla!</li></ul></div>
         </div>
         <div class="section">
-            <h3 class="sectitle">✨ Estetik Odak</h3>
+            <h3 class="sectitle">✨ Kızlar Erisin</h3>
             <div class="aesthetic">
                 <div class="aescard"><div class="emoji">🦋</div><h4>YAN OMUZ</h4><p>V vücut!</p></div>
                 <div class="aescard"><div class="emoji">👕</div><h4>ÜST GÖĞÜS</h4><p>Tişörtten belli!</p></div>
                 <div class="aescard"><div class="emoji">💪</div><h4>BICEPS</h4><p>Kalın kollar!</p></div>
             </div>
         </div>
-        <div class="progress">
-            <h3>📊 8 Haftalık Program</h3>
-            <div class="week-nav">
-                <button id="prevWeek">‹</button>
-                <div class="week-info">
-                    <div class="week-num" id="weekNum">Hafta 1 / 8</div>
-                    <div class="week-dates" id="weekDates">1 Ocak - 7 Ocak</div>
-                </div>
-                <button id="nextWeek">›</button>
-            </div>
-            <div class="week-progress"><div class="week-progress-fill" id="totalProgress"></div></div>
-            <div class="week-progress-text"><span id="totalDays">0</span> / 56 gün tamamlandı</div>
-            <div class="calgrid" id="calgrid"></div>
-        </div>
     </section>
+
+    <!-- Progress/Calendar Section (Global - appears under all sections) -->
+    <div class="progress" id="globalProgress">
+        <h3>📊 8 Haftalık Program</h3>
+        <div class="week-nav">
+            <button id="prevWeek">‹</button>
+            <div class="week-info">
+                <div class="week-num" id="weekNum">Hafta 1 / 8</div>
+                <div class="week-dates" id="weekDates">1 Ocak - 7 Ocak</div>
+            </div>
+            <button id="nextWeek">›</button>
+        </div>
+        <div class="week-progress"><div class="week-progress-fill" id="totalProgress"></div></div>
+        <div class="week-progress-text"><span id="totalDays">0</span> / 56 gün tamamlandı</div>
+        <div class="calgrid" id="calgrid"></div>
+    </div>
 
     <div class="motiv">
         <p>2 AY SONRA FATİH'İ TANIYAMAYACAKSINIZ!</p>
@@ -386,6 +394,14 @@
             <div class="modal-section" id="workoutOrderSection">
                 <h3>Antrenman Sıralaması</h3>
                 <div class="workout-order" id="workoutOrder"></div>
+            </div>
+
+            <div class="modal-section">
+                <h3>Program Başlangıç Tarihi</h3>
+                <div class="date-picker-container">
+                    <input type="date" id="programStartDate" class="date-input">
+                    <p class="date-info">Takvim bu tarihe göre hesaplanır</p>
+                </div>
             </div>
 
             <div class="modal-actions">
@@ -642,6 +658,10 @@
                 tempSelectedDays = [...selectedDays];
                 renderDaySelector();
                 renderWorkoutOrder();
+                // Load current program start date
+                const dateInput = document.getElementById('programStartDate');
+                const currentStart = getProgramStart();
+                dateInput.value = dateKey(currentStart);
                 modal.classList.add('show');
             };
 
@@ -659,9 +679,22 @@
                 }
                 selectedDays = [...tempSelectedDays].sort((a,b) => a-b);
                 S.set('f_workout_days', JSON.stringify(selectedDays));
+
+                // Save program start date
+                const dateInput = document.getElementById('programStartDate');
+                if (dateInput.value) {
+                    const newStart = new Date(dateInput.value);
+                    newStart.setHours(0,0,0,0);
+                    S.set('f_program_start', newStart.toISOString());
+                    programStart = newStart;
+                    currentWeek = getCurrentWeekIndex();
+                    renderWeek(currentWeek);
+                    updateTotalProgress();
+                }
+
                 applyWorkoutDays();
                 modal.classList.remove('show');
-                toast('✅ Günler kaydedildi!');
+                toast('✅ Ayarlar kaydedildi!');
             };
 
             daySelector.onclick = (e) => {
