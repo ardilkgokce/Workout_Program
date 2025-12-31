@@ -141,14 +141,26 @@
         
         .progress { margin-top:20px; padding:18px 12px; background:linear-gradient(135deg,rgba(255,107,53,0.1),rgba(247,197,159,0.05)); border-radius:16px; border:1px solid rgba(255,107,53,0.2); }
         .progress h3 { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; margin-bottom:12px; }
-        .calgrid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
-        .calday { aspect-ratio:1; background:rgba(255,255,255,0.03); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.6rem; color:var(--text3); cursor:pointer; border:1px solid transparent; min-height:38px; }
+        .week-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; gap:10px; }
+        .week-nav button { width:40px; height:40px; background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text); font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+        .week-nav button:disabled { opacity:0.3; cursor:not-allowed; }
+        .week-nav button:not(:disabled):active { transform:scale(0.95); background:var(--accent); }
+        .week-info { text-align:center; flex:1; }
+        .week-info .week-num { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; color:var(--accent); }
+        .week-info .week-dates { font-size:0.75rem; color:var(--text3); margin-top:2px; }
+        .week-progress { background:rgba(255,255,255,0.1); height:8px; border-radius:4px; margin-bottom:15px; overflow:hidden; }
+        .week-progress-fill { height:100%; background:var(--grad); border-radius:4px; transition:width 0.4s; }
+        .week-progress-text { text-align:center; font-size:0.8rem; color:var(--text2); margin-bottom:15px; }
+        .calgrid { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+        .calday { aspect-ratio:1; background:rgba(255,255,255,0.03); border-radius:10px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.6rem; color:var(--text3); cursor:pointer; border:2px solid transparent; min-height:44px; transition:all 0.2s; }
         .calday:active { transform:scale(0.95); }
-        .calday .dn { font-size:0.5rem; text-transform:uppercase; }
-        .calday .dd { font-family:'Bebas Neue',sans-serif; font-size:1rem; color:var(--text); }
-        .calday.today { border-color:var(--accent); background:rgba(255,107,53,0.1); }
+        .calday .dn { font-size:0.55rem; text-transform:uppercase; letter-spacing:0.5px; }
+        .calday .dd { font-family:'Bebas Neue',sans-serif; font-size:1.1rem; color:var(--text); }
+        .calday.today { border-color:var(--accent); background:rgba(255,107,53,0.15); }
         .calday.done { background:rgba(74,222,128,0.15); border-color:var(--success); }
-        .calday.done::after { content:'✓'; font-size:0.6rem; color:var(--success); }
+        .calday.done .dd { color:var(--success); }
+        .calday.future { opacity:0.5; }
+        .calday .check { font-size:0.7rem; color:var(--success); margin-top:1px; }
         
         .motiv { margin-top:25px; padding:25px 15px; background:var(--grad); border-radius:16px; text-align:center; }
         .motiv p { font-family:'Bebas Neue',sans-serif; font-size:clamp(1.1rem,4vw,1.5rem); letter-spacing:2px; }
@@ -291,7 +303,17 @@
             </div>
         </div>
         <div class="progress">
-            <h3>📊 Haftalık İlerleme</h3>
+            <h3>📊 8 Haftalık Program</h3>
+            <div class="week-nav">
+                <button id="prevWeek">‹</button>
+                <div class="week-info">
+                    <div class="week-num" id="weekNum">Hafta 1 / 8</div>
+                    <div class="week-dates" id="weekDates">1 Ocak - 7 Ocak</div>
+                </div>
+                <button id="nextWeek">›</button>
+            </div>
+            <div class="week-progress"><div class="week-progress-fill" id="totalProgress"></div></div>
+            <div class="week-progress-text"><span id="totalDays">0</span> / 56 gün tamamlandı</div>
             <div class="calgrid" id="calgrid"></div>
         </div>
     </section>
@@ -334,13 +356,148 @@
 
         function initSupps(){document.getElementById('crcard').onclick=function(){this.classList.toggle('taken');S.set('fcr_'+today(),this.classList.contains('taken'));if(this.classList.contains('taken'))toast('💎 Creatine alındı!');};document.getElementById('prcard').onclick=function(){this.classList.toggle('taken');S.set('fpr_'+today(),this.classList.contains('taken'));if(this.classList.contains('taken'))toast('🥤 Protein alındı!');};}
 
-        function initCal(){const g=document.getElementById('calgrid');if(!g)return;const dn=['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];const t=new Date();const s=new Date(t);const dow=t.getDay();const diff=dow===0?6:dow-1;s.setDate(t.getDate()-diff);
-        for(let w=0;w<4;w++){for(let d=0;d<7;d++){const dt=new Date(s);dt.setDate(s.getDate()+(w*7)+d);const el=document.createElement('div');el.className='calday';el.innerHTML=`<span class="dn">${dn[d]}</span><span class="dd">${dt.getDate()}</span>`;const k=dateKey(dt);el.dataset.k=k;if(dt.toDateString()===t.toDateString())el.classList.add('today');if(S.get('fd_'+k)==='1')el.classList.add('done');el.onclick=()=>{el.classList.toggle('done');if(el.classList.contains('done'))S.set('fd_'+k,'1');else S.rm('fd_'+k);updateDays();};g.appendChild(el);}}}
+        // 8 Haftalık Takvim Sistemi
+        let programStart = null;
+        let currentWeek = 0;
+        const TOTAL_WEEKS = 8;
+        const dayNames = ['Pzt','Sal','Çar','Per','Cum','Cmt','Paz'];
+        const monthNames = ['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+
+        function getProgramStart() {
+            let saved = S.get('f_program_start');
+            if (saved) return new Date(saved);
+            // İlk açılışta bugünün haftasının pazartesisini başlangıç yap
+            const now = new Date();
+            const dow = now.getDay();
+            const diff = dow === 0 ? 6 : dow - 1;
+            const monday = new Date(now);
+            monday.setDate(now.getDate() - diff);
+            monday.setHours(0,0,0,0);
+            S.set('f_program_start', monday.toISOString());
+            return monday;
+        }
+
+        function getWeekStart(weekIndex) {
+            const start = new Date(programStart);
+            start.setDate(start.getDate() + (weekIndex * 7));
+            return start;
+        }
+
+        function formatDateRange(weekIndex) {
+            const start = getWeekStart(weekIndex);
+            const end = new Date(start);
+            end.setDate(start.getDate() + 6);
+            const sameMonth = start.getMonth() === end.getMonth();
+            if (sameMonth) {
+                return `${start.getDate()} - ${end.getDate()} ${monthNames[start.getMonth()]}`;
+            }
+            return `${start.getDate()} ${monthNames[start.getMonth()]} - ${end.getDate()} ${monthNames[end.getMonth()]}`;
+        }
+
+        function renderWeek(weekIndex) {
+            const g = document.getElementById('calgrid');
+            if (!g) return;
+            g.innerHTML = '';
+
+            const weekStart = getWeekStart(weekIndex);
+            const now = new Date();
+            now.setHours(0,0,0,0);
+
+            for (let d = 0; d < 7; d++) {
+                const dt = new Date(weekStart);
+                dt.setDate(weekStart.getDate() + d);
+                const el = document.createElement('div');
+                el.className = 'calday';
+                const k = dateKey(dt);
+                el.dataset.k = k;
+
+                const isDone = S.get('fd_' + k) === '1';
+                const isToday = dt.toDateString() === now.toDateString();
+                const isFuture = dt > now;
+
+                el.innerHTML = `<span class="dn">${dayNames[d]}</span><span class="dd">${dt.getDate()}</span>${isDone ? '<span class="check">✓</span>' : ''}`;
+
+                if (isToday) el.classList.add('today');
+                if (isDone) el.classList.add('done');
+                if (isFuture) el.classList.add('future');
+
+                el.onclick = () => {
+                    if (el.classList.contains('done')) {
+                        el.classList.remove('done');
+                        S.rm('fd_' + k);
+                        el.querySelector('.check')?.remove();
+                    } else {
+                        el.classList.add('done');
+                        S.set('fd_' + k, '1');
+                        if (!el.querySelector('.check')) {
+                            el.insertAdjacentHTML('beforeend', '<span class="check">✓</span>');
+                        }
+                    }
+                    updateDays();
+                    updateTotalProgress();
+                };
+                g.appendChild(el);
+            }
+
+            // Hafta bilgisini güncelle
+            document.getElementById('weekNum').textContent = `Hafta ${weekIndex + 1} / ${TOTAL_WEEKS}`;
+            document.getElementById('weekDates').textContent = formatDateRange(weekIndex);
+
+            // Butonları güncelle
+            document.getElementById('prevWeek').disabled = weekIndex === 0;
+            document.getElementById('nextWeek').disabled = weekIndex === TOTAL_WEEKS - 1;
+        }
+
+        function updateTotalProgress() {
+            let count = 0;
+            for (let w = 0; w < TOTAL_WEEKS; w++) {
+                const weekStart = getWeekStart(w);
+                for (let d = 0; d < 7; d++) {
+                    const dt = new Date(weekStart);
+                    dt.setDate(weekStart.getDate() + d);
+                    if (S.get('fd_' + dateKey(dt)) === '1') count++;
+                }
+            }
+            const totalDays = TOTAL_WEEKS * 7;
+            document.getElementById('totalDays').textContent = count;
+            document.getElementById('totalProgress').style.width = (count / totalDays * 100) + '%';
+        }
+
+        function getCurrentWeekIndex() {
+            const now = new Date();
+            now.setHours(0,0,0,0);
+            const diffTime = now - programStart;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            const weekIndex = Math.floor(diffDays / 7);
+            return Math.max(0, Math.min(weekIndex, TOTAL_WEEKS - 1));
+        }
+
+        function initCal() {
+            programStart = getProgramStart();
+            currentWeek = getCurrentWeekIndex();
+
+            document.getElementById('prevWeek').onclick = () => {
+                if (currentWeek > 0) {
+                    currentWeek--;
+                    renderWeek(currentWeek);
+                }
+            };
+
+            document.getElementById('nextWeek').onclick = () => {
+                if (currentWeek < TOTAL_WEEKS - 1) {
+                    currentWeek++;
+                    renderWeek(currentWeek);
+                }
+            };
+
+            renderWeek(currentWeek);
+            updateTotalProgress();
+        }
 
         function saveProgress(){const p={};document.querySelectorAll('.excard').forEach((c,i)=>{p['e'+i]=c.querySelectorAll('.setbtn.done').length;});S.set('fp_'+today(),JSON.stringify(p));}
         function loadProgress(){const sv=S.get('fp_'+today());if(sv){try{const p=JSON.parse(sv);document.querySelectorAll('.excard').forEach((c,i)=>{const n=p['e'+i]||0;const bs=c.querySelectorAll('.setbtn');for(let j=0;j<n;j++)if(bs[j])bs[j].classList.add('done');if(n===bs.length&&n>0)c.classList.add('done');});}catch(e){}}if(S.get('fcr_'+today())==='true')document.getElementById('crcard')?.classList.add('taken');if(S.get('fpr_'+today())==='true')document.getElementById('prcard')?.classList.add('taken');}
 
-        function checkDayDone(){const sec=document.querySelector('.day.active');if(!sec||['car','bes','tip'].includes(sec.id))return;const cs=sec.querySelectorAll('.excard'),dn=sec.querySelectorAll('.excard.done');if(cs.length===dn.length&&cs.length>0){toast('🎉 Antrenman tamamlandı!');S.set('fd_'+today(),'1');updateDays();const cd=document.querySelector(`.calday[data-k="${today()}"]`);if(cd)cd.classList.add('done');}}
+        function checkDayDone(){const sec=document.querySelector('.day.active');if(!sec||['car','bes','tip'].includes(sec.id))return;const cs=sec.querySelectorAll('.excard'),dn=sec.querySelectorAll('.excard.done');if(cs.length===dn.length&&cs.length>0){toast('🎉 Antrenman tamamlandı!');S.set('fd_'+today(),'1');updateDays();updateTotalProgress();const cd=document.querySelector(`.calday[data-k="${today()}"]`);if(cd){cd.classList.add('done');if(!cd.querySelector('.check'))cd.insertAdjacentHTML('beforeend','<span class="check">✓</span>');}}}
 
         function updateDays(){let c=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('fd_')&&localStorage.getItem(k)==='1')c++;}}catch(e){}document.getElementById('daycount').textContent=c;}
 
