@@ -173,6 +173,40 @@
         
         button, .setbtn, .glass, .restitem, .suppcard, .calday { -webkit-user-select:none; user-select:none; }
         @supports (-webkit-touch-callout:none) { body { min-height:-webkit-fill-available; } }
+
+        /* Settings */
+        .settings-btn { position:absolute; top:20px; right:15px; width:40px; height:40px; background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); border-radius:10px; font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+        .settings-btn:active { transform:scale(0.95); background:var(--accent); }
+        .header { position:relative; }
+
+        .modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.8); z-index:1000; display:none; align-items:center; justify-content:center; padding:20px; }
+        .modal-overlay.show { display:flex; }
+        .modal { background:var(--bg-card); border-radius:16px; padding:20px; max-width:400px; width:100%; max-height:90vh; overflow-y:auto; animation:fadeIn 0.3s; }
+        .modal h2 { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+        .modal-close { margin-left:auto; width:32px; height:32px; background:rgba(255,255,255,0.1); border:none; border-radius:8px; color:var(--text); font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+        .modal-close:active { background:var(--accent); }
+
+        .day-selector { display:flex; flex-direction:column; gap:8px; }
+        .day-selector-item { display:flex; align-items:center; gap:12px; padding:12px; background:rgba(255,255,255,0.03); border-radius:10px; cursor:pointer; border:2px solid transparent; transition:all 0.2s; }
+        .day-selector-item:active { transform:scale(0.98); }
+        .day-selector-item.selected { border-color:var(--accent); background:rgba(255,107,53,0.1); }
+        .day-selector-item .day-check { width:24px; height:24px; border:2px solid var(--text3); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:0.8rem; flex-shrink:0; }
+        .day-selector-item.selected .day-check { background:var(--accent); border-color:var(--accent); }
+        .day-selector-item .day-name { font-weight:500; }
+        .day-selector-item .day-workout { font-size:0.75rem; color:var(--text3); }
+
+        .modal-section { margin-top:20px; }
+        .modal-section h3 { font-size:0.9rem; color:var(--text2); margin-bottom:10px; }
+        .workout-order { display:flex; flex-direction:column; gap:6px; }
+        .workout-order-item { display:flex; align-items:center; gap:10px; padding:10px 12px; background:rgba(255,255,255,0.03); border-radius:8px; font-size:0.85rem; }
+        .workout-order-item .order-num { width:24px; height:24px; background:var(--grad); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:0.75rem; font-weight:700; flex-shrink:0; }
+        .workout-order-item .order-icon { font-size:1.1rem; }
+
+        .modal-actions { margin-top:20px; display:flex; gap:10px; }
+        .modal-actions button { flex:1; padding:12px; border-radius:10px; font-family:'Outfit',sans-serif; font-size:0.9rem; font-weight:500; cursor:pointer; border:none; }
+        .btn-save { background:var(--grad); color:#fff; }
+        .btn-save:active { transform:scale(0.98); }
+        .btn-cancel { background:rgba(255,255,255,0.1); color:var(--text); }
     </style>
 </head>
 <body>
@@ -180,6 +214,7 @@
         <h1>FATİH'İN DÖNÜŞÜMÜ</h1>
         <p class="sub">2 Aylık Clean Bulk Programı</p>
         <span class="badge">🎯 Hedef: +7.6 kg Kas</span>
+        <button class="settings-btn" id="settingsBtn">⚙️</button>
     </header>
 
     <div class="stats">
@@ -205,9 +240,9 @@
         <button class="tab" data-day="tip">💡 İpuçları</button>
     </div>
 
-    <!-- Pazartesi -->
-    <section class="day active" id="pzt">
-        <div class="day-head"><div class="day-icon">💪</div><div><div class="day-title">PAZARTESİ - PUSH</div><div class="day-sub">Göğüs & Arka Kol</div></div></div>
+    <!-- Push Workout -->
+    <section class="day workout-section" data-workout="push" id="pzt">
+        <div class="day-head"><div class="day-icon">💪</div><div><div class="day-title">PAZARTESİ - PUSH</div><div class="day-sub">Göğüs & Triceps</div></div></div>
         <div class="exlist">
             <div class="excard"><div class="exhead"><div class="exname"><span class="num">1</span><div>Dumbbell Floor Press<span class="sub">Yerde Göğüs Pres</span></div></div><span class="exsets">4×10-12</span></div><div class="extip">💡 Ağır kiloyla çalış, üst göğse hizala!</div><div class="settrack"><button class="setbtn">1</button><button class="setbtn">2</button><button class="setbtn">3</button><button class="setbtn">4</button></div></div>
             <div class="excard"><div class="exhead"><div class="exname"><span class="num">2</span><div>Dumbbell Fly<span class="sub">Göğüs Açış</span></div></div><span class="exsets">3×12</span></div><div class="extip">💡 Kolları hafif bükük tut!</div><div class="settrack"><button class="setbtn">1</button><button class="setbtn">2</button><button class="setbtn">3</button></div></div>
@@ -217,8 +252,8 @@
         </div>
     </section>
 
-    <!-- Salı -->
-    <section class="day" id="sal">
+    <!-- Pull Workout -->
+    <section class="day workout-section" data-workout="pull" id="sal">
         <div class="day-head"><div class="day-icon">🏋️</div><div><div class="day-title">SALI - PULL</div><div class="day-sub">Sırt & Biceps</div></div></div>
         <div class="exlist">
             <div class="excard"><div class="exhead"><div class="exname"><span class="num">1</span><div>Dumbbell Row<span class="sub">Tek Kol Sırt</span></div></div><span class="exsets">4×10</span></div><div class="extip">💡 Kürek kemiğini sıkıştır!</div><div class="settrack"><button class="setbtn">1</button><button class="setbtn">2</button><button class="setbtn">3</button><button class="setbtn">4</button></div></div>
@@ -229,24 +264,8 @@
         </div>
     </section>
 
-    <!-- Çarşamba -->
-    <section class="day" id="car">
-        <div class="rest">
-            <div class="icon">😴</div>
-            <h3>DİNLENME GÜNÜ</h3>
-            <p>Kaslar dinlenirken büyür! Bol su, protein ve uyku.</p>
-            <div class="restlist">
-                <div class="restitem"><span class="chk">✓</span><span>3.5L su içtim</span></div>
-                <div class="restitem"><span class="chk">✓</span><span>120g protein aldım</span></div>
-                <div class="restitem"><span class="chk">✓</span><span>Creatine kullandım</span></div>
-                <div class="restitem"><span class="chk">✓</span><span>7+ saat uyudum</span></div>
-                <div class="restitem"><span class="chk">✓</span><span>Germe yaptım</span></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Perşembe -->
-    <section class="day" id="per">
+    <!-- Leg Workout -->
+    <section class="day workout-section" data-workout="leg" id="per">
         <div class="day-head"><div class="day-icon">🦵</div><div><div class="day-title">PERŞEMBE - LEG</div><div class="day-sub">Bacak & Karın</div></div></div>
         <div class="exlist">
             <div class="excard"><div class="exhead"><div class="exname"><span class="num">1</span><div>Goblet Squat<span class="sub">Göğüste Tutarak</span></div></div><span class="exsets">4×12</span></div><div class="extip">💡 Dizler parmak ucunu geçmesin!</div><div class="settrack"><button class="setbtn">1</button><button class="setbtn">2</button><button class="setbtn">3</button><button class="setbtn">4</button></div></div>
@@ -257,8 +276,8 @@
         </div>
     </section>
 
-    <!-- Cuma -->
-    <section class="day" id="cum">
+    <!-- Volume Workout -->
+    <section class="day workout-section" data-workout="volume" id="cum">
         <div class="day-head"><div class="day-icon">🔥</div><div><div class="day-title">CUMA - HACİM</div><div class="day-sub">Üst Vücut</div></div></div>
         <div class="exlist">
             <div class="excard"><div class="exhead"><div class="exname"><span class="num">1</span><div>Z-Bar Upright Row<span class="sub">Çeneye Çekiş</span></div></div><span class="exsets">3×12</span></div><div class="extip">💡 Dirsekler yukarı!</div><div class="settrack"><button class="setbtn">1</button><button class="setbtn">2</button><button class="setbtn">3</button></div></div>
@@ -327,13 +346,68 @@
 
     <div class="toast" id="toast"><span>✅</span><span id="toastmsg">Harika!</span></div>
 
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal">
+            <h2>⚙️ Ayarlar <button class="modal-close" id="modalClose">×</button></h2>
+
+            <div class="modal-section">
+                <h3>Antrenman Günlerini Seç (4 gün)</h3>
+                <div class="day-selector" id="daySelector">
+                    <div class="day-selector-item" data-day="0"><span class="day-check">✓</span><div><div class="day-name">Pazartesi</div><div class="day-workout">Push - Göğüs & Triceps</div></div></div>
+                    <div class="day-selector-item" data-day="1"><span class="day-check">✓</span><div><div class="day-name">Salı</div><div class="day-workout">Pull - Sırt & Biceps</div></div></div>
+                    <div class="day-selector-item" data-day="2"><span class="day-check">✓</span><div><div class="day-name">Çarşamba</div><div class="day-workout">Dinlenme</div></div></div>
+                    <div class="day-selector-item" data-day="3"><span class="day-check">✓</span><div><div class="day-name">Perşembe</div><div class="day-workout">Leg - Bacak & Karın</div></div></div>
+                    <div class="day-selector-item" data-day="4"><span class="day-check">✓</span><div><div class="day-name">Cuma</div><div class="day-workout">Volume - Üst Vücut</div></div></div>
+                    <div class="day-selector-item" data-day="5"><span class="day-check">✓</span><div><div class="day-name">Cumartesi</div><div class="day-workout">Dinlenme</div></div></div>
+                    <div class="day-selector-item" data-day="6"><span class="day-check">✓</span><div><div class="day-name">Pazar</div><div class="day-workout">Dinlenme</div></div></div>
+                </div>
+            </div>
+
+            <div class="modal-section" id="workoutOrderSection">
+                <h3>Antrenman Sıralaması</h3>
+                <div class="workout-order" id="workoutOrder"></div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" id="btnCancel">İptal</button>
+                <button class="btn-save" id="btnSave">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const S={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v);return true}catch(e){return false}},rm:k=>{try{localStorage.removeItem(k)}catch(e){}}};
         const today=()=>new Date().toISOString().split('T')[0];
         const dateKey=d=>d.toISOString().split('T')[0];
-        
+
+        // Workout Types
+        const workoutTypes = [
+            { id: 'push', name: 'Push', icon: '💪', desc: 'Göğüs & Triceps', section: 'pzt' },
+            { id: 'pull', name: 'Pull', icon: '🏋️', desc: 'Sırt & Biceps', section: 'sal' },
+            { id: 'leg', name: 'Leg', icon: '🦵', desc: 'Bacak & Karın', section: 'per' },
+            { id: 'volume', name: 'Hacim', icon: '🔥', desc: 'Üst Vücut', section: 'cum' }
+        ];
+
+        const fullDayNames = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
+        const shortDayIds = ['pzt', 'sal', 'car', 'per', 'cum', 'cmt', 'paz'];
+
+        // Default: Pzt, Salı, Perşembe, Cuma (index 0,1,3,4)
+        let selectedDays = JSON.parse(S.get('f_workout_days') || '[0,1,3,4]');
+
+        function getWorkoutSchedule() {
+            // Maps selected day indices to workout types in order
+            const schedule = {};
+            selectedDays.forEach((dayIndex, i) => {
+                if (i < workoutTypes.length) {
+                    schedule[dayIndex] = workoutTypes[i];
+                }
+            });
+            return schedule;
+        }
+
         document.addEventListener('DOMContentLoaded',()=>{
-            initWater();initTabs();initSets();initRest();initSupps();initCal();loadProgress();updateDays();setToday();
+            initWater();initTabs();initSets();initRest();initSupps();initCal();loadProgress();updateDays();initSettings();applyWorkoutDays();setToday();
         });
 
         function initWater(){
@@ -348,7 +422,29 @@
 
         function initTabs(){document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.querySelectorAll('.day').forEach(d=>d.classList.remove('active'));document.getElementById(t.dataset.day)?.classList.add('active');});}
         
-        function setToday(){const days=['','pzt','sal','car','per','cum','',''];const d=new Date().getDay();const dn=days[d];if(dn){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.day').forEach(x=>x.classList.remove('active'));const tb=document.querySelector(`[data-day="${dn}"]`);if(tb){tb.classList.add('active');document.getElementById(dn)?.classList.add('active');}else{document.querySelector('[data-day="tip"]').classList.add('active');document.getElementById('tip').classList.add('active');}}else{document.querySelector('[data-day="tip"]').classList.add('active');document.getElementById('tip').classList.add('active');}}
+        function setToday(){
+            const jsDay = new Date().getDay(); // 0=Pazar, 1=Pzt, ...
+            const dayIndex = jsDay === 0 ? 6 : jsDay - 1; // 0=Pzt, 1=Salı, ... 6=Pazar
+            const schedule = getWorkoutSchedule();
+
+            // Bugün antrenman günü mü?
+            if (schedule[dayIndex]) {
+                const workout = schedule[dayIndex];
+                document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+                document.querySelectorAll('.day').forEach(x=>x.classList.remove('active'));
+                const tb = document.querySelector(`[data-day="${workout.id}"]`);
+                if(tb) {
+                    tb.classList.add('active');
+                    document.getElementById(workout.id)?.classList.add('active');
+                    return;
+                }
+            }
+            // Değilse ipuçları sekmesini aç
+            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+            document.querySelectorAll('.day').forEach(x=>x.classList.remove('active'));
+            document.querySelector('[data-day="tip"]').classList.add('active');
+            document.getElementById('tip').classList.add('active');
+        }
 
         function initSets(){document.querySelectorAll('.setbtn').forEach(b=>b.onclick=()=>{b.classList.toggle('done');const c=b.closest('.excard'),all=c.querySelectorAll('.setbtn'),dn=c.querySelectorAll('.setbtn.done');if(all.length===dn.length){c.classList.add('done');toast('💪 Hareket tamam!');}else c.classList.remove('done');saveProgress();checkDayDone();});}
 
@@ -497,11 +593,155 @@
         function saveProgress(){const p={};document.querySelectorAll('.excard').forEach((c,i)=>{p['e'+i]=c.querySelectorAll('.setbtn.done').length;});S.set('fp_'+today(),JSON.stringify(p));}
         function loadProgress(){const sv=S.get('fp_'+today());if(sv){try{const p=JSON.parse(sv);document.querySelectorAll('.excard').forEach((c,i)=>{const n=p['e'+i]||0;const bs=c.querySelectorAll('.setbtn');for(let j=0;j<n;j++)if(bs[j])bs[j].classList.add('done');if(n===bs.length&&n>0)c.classList.add('done');});}catch(e){}}if(S.get('fcr_'+today())==='true')document.getElementById('crcard')?.classList.add('taken');if(S.get('fpr_'+today())==='true')document.getElementById('prcard')?.classList.add('taken');}
 
-        function checkDayDone(){const sec=document.querySelector('.day.active');if(!sec||['car','bes','tip'].includes(sec.id))return;const cs=sec.querySelectorAll('.excard'),dn=sec.querySelectorAll('.excard.done');if(cs.length===dn.length&&cs.length>0){toast('🎉 Antrenman tamamlandı!');S.set('fd_'+today(),'1');updateDays();updateTotalProgress();const cd=document.querySelector(`.calday[data-k="${today()}"]`);if(cd){cd.classList.add('done');if(!cd.querySelector('.check'))cd.insertAdjacentHTML('beforeend','<span class="check">✓</span>');}}}
+        function checkDayDone(){const sec=document.querySelector('.day.active');if(!sec||['bes','tip'].includes(sec.id))return;const cs=sec.querySelectorAll('.excard'),dn=sec.querySelectorAll('.excard.done');if(cs.length===dn.length&&cs.length>0){toast('🎉 Antrenman tamamlandı!');S.set('fd_'+today(),'1');updateDays();updateTotalProgress();const cd=document.querySelector(`.calday[data-k="${today()}"]`);if(cd){cd.classList.add('done');if(!cd.querySelector('.check'))cd.insertAdjacentHTML('beforeend','<span class="check">✓</span>');}}}
 
         function updateDays(){let c=0;try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('fd_')&&localStorage.getItem(k)==='1')c++;}}catch(e){}document.getElementById('daycount').textContent=c;}
 
         function toast(m){const t=document.getElementById('toast');document.getElementById('toastmsg').textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+        // Settings Functions
+        let tempSelectedDays = [];
+
+        function initSettings() {
+            const modal = document.getElementById('settingsModal');
+            const settingsBtn = document.getElementById('settingsBtn');
+            const modalClose = document.getElementById('modalClose');
+            const btnCancel = document.getElementById('btnCancel');
+            const btnSave = document.getElementById('btnSave');
+            const daySelector = document.getElementById('daySelector');
+
+            settingsBtn.onclick = () => {
+                tempSelectedDays = [...selectedDays];
+                renderDaySelector();
+                renderWorkoutOrder();
+                modal.classList.add('show');
+            };
+
+            modalClose.onclick = () => modal.classList.remove('show');
+            btnCancel.onclick = () => modal.classList.remove('show');
+
+            modal.onclick = (e) => {
+                if (e.target === modal) modal.classList.remove('show');
+            };
+
+            btnSave.onclick = () => {
+                if (tempSelectedDays.length !== 4) {
+                    toast('⚠️ 4 gün seçmelisin!');
+                    return;
+                }
+                selectedDays = [...tempSelectedDays].sort((a,b) => a-b);
+                S.set('f_workout_days', JSON.stringify(selectedDays));
+                applyWorkoutDays();
+                modal.classList.remove('show');
+                toast('✅ Günler kaydedildi!');
+            };
+
+            daySelector.onclick = (e) => {
+                const item = e.target.closest('.day-selector-item');
+                if (!item) return;
+                const dayIndex = parseInt(item.dataset.day);
+
+                if (tempSelectedDays.includes(dayIndex)) {
+                    tempSelectedDays = tempSelectedDays.filter(d => d !== dayIndex);
+                } else {
+                    if (tempSelectedDays.length >= 4) {
+                        toast('⚠️ En fazla 4 gün!');
+                        return;
+                    }
+                    tempSelectedDays.push(dayIndex);
+                }
+                tempSelectedDays.sort((a,b) => a-b);
+                renderDaySelector();
+                renderWorkoutOrder();
+            };
+        }
+
+        function renderDaySelector() {
+            document.querySelectorAll('.day-selector-item').forEach(item => {
+                const dayIndex = parseInt(item.dataset.day);
+                const isSelected = tempSelectedDays.includes(dayIndex);
+                item.classList.toggle('selected', isSelected);
+
+                // Update workout description based on order
+                const orderIndex = tempSelectedDays.indexOf(dayIndex);
+                const workoutDesc = item.querySelector('.day-workout');
+                if (isSelected && orderIndex < workoutTypes.length) {
+                    workoutDesc.textContent = `${workoutTypes[orderIndex].name} - ${workoutTypes[orderIndex].desc}`;
+                } else {
+                    workoutDesc.textContent = 'Dinlenme';
+                }
+            });
+        }
+
+        function renderWorkoutOrder() {
+            const container = document.getElementById('workoutOrder');
+            const section = document.getElementById('workoutOrderSection');
+
+            if (tempSelectedDays.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            section.style.display = 'block';
+
+            container.innerHTML = tempSelectedDays.map((dayIndex, i) => {
+                if (i >= workoutTypes.length) return '';
+                const workout = workoutTypes[i];
+                return `<div class="workout-order-item">
+                    <span class="order-num">${i+1}</span>
+                    <span class="order-icon">${workout.icon}</span>
+                    <span>${fullDayNames[dayIndex]}: ${workout.name}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function applyWorkoutDays() {
+            const tabsContainer = document.getElementById('tabs');
+
+            // Rebuild tabs
+            tabsContainer.innerHTML = '';
+
+            // Add workout day tabs in order
+            selectedDays.forEach((dayIndex, i) => {
+                if (i >= workoutTypes.length) return;
+                const workout = workoutTypes[i];
+                const tabId = shortDayIds[dayIndex];
+                const dayName = fullDayNames[dayIndex];
+
+                const btn = document.createElement('button');
+                btn.className = 'tab';
+                btn.dataset.day = workout.id; // Use workout id instead of day id
+                btn.textContent = dayName;
+                tabsContainer.appendChild(btn);
+
+                // Update section header using data-workout attribute
+                const section = document.querySelector(`[data-workout="${workout.id}"]`);
+                if (section) {
+                    section.id = workout.id; // Set ID to workout type for tab linking
+                    const title = section.querySelector('.day-title');
+                    const sub = section.querySelector('.day-sub');
+                    const icon = section.querySelector('.day-icon');
+                    if (title) title.textContent = `${dayName.toUpperCase()} - ${workout.name.toUpperCase()}`;
+                    if (sub) sub.textContent = workout.desc;
+                    if (icon) icon.textContent = workout.icon;
+                }
+            });
+
+            // Add Beslenme and İpuçları tabs
+            const besTab = document.createElement('button');
+            besTab.className = 'tab';
+            besTab.dataset.day = 'bes';
+            besTab.textContent = '🍽️ Beslenme';
+            tabsContainer.appendChild(besTab);
+
+            const tipTab = document.createElement('button');
+            tipTab.className = 'tab';
+            tipTab.dataset.day = 'tip';
+            tipTab.textContent = '💡 İpuçları';
+            tabsContainer.appendChild(tipTab);
+
+            // Reinit tabs
+            initTabs();
+        }
     </script>
 </body>
 </html>
