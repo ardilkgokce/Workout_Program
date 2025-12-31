@@ -216,6 +216,88 @@
         .date-input:focus { outline:none; border-color:var(--accent); }
         .date-input::-webkit-calendar-picker-indicator { filter:invert(1); cursor:pointer; }
         .date-info { font-size:0.75rem; color:var(--text3); margin-top:8px; }
+
+        /* Weight Input */
+        .weight-input { display:flex; align-items:center; gap:6px; margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.05); }
+        .weight-input label { font-size:0.7rem; color:var(--text3); }
+        .weight-input input { width:60px; padding:6px 8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:var(--text); font-family:'Outfit',sans-serif; font-size:0.85rem; text-align:center; }
+        .weight-input input:focus { outline:none; border-color:var(--accent); }
+        .weight-input span { font-size:0.75rem; color:var(--text3); }
+        .weight-change { font-size:0.7rem; margin-left:auto; padding:3px 8px; border-radius:10px; }
+        .weight-change.up { background:rgba(74,222,128,0.2); color:var(--success); }
+        .weight-change.down { background:rgba(239,68,68,0.2); color:#ef4444; }
+
+        /* Timer */
+        .timer-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1001; display:none; align-items:center; justify-content:center; flex-direction:column; }
+        .timer-overlay.show { display:flex; }
+        .timer-display { font-family:'Bebas Neue',sans-serif; font-size:8rem; color:var(--accent); line-height:1; }
+        .timer-label { font-size:1.2rem; color:var(--text2); margin-bottom:20px; }
+        .timer-buttons { display:flex; gap:15px; margin-top:30px; }
+        .timer-btn { padding:12px 30px; border-radius:12px; font-family:'Outfit',sans-serif; font-size:1rem; font-weight:500; cursor:pointer; border:none; }
+        .timer-btn.primary { background:var(--grad); color:#fff; }
+        .timer-btn.secondary { background:rgba(255,255,255,0.1); color:var(--text); }
+        .timer-presets { display:flex; gap:10px; margin-top:20px; }
+        .timer-preset { padding:8px 16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:20px; color:var(--text2); font-size:0.85rem; cursor:pointer; }
+        .timer-preset:active { background:var(--accent); color:#fff; }
+
+        /* Measurements */
+        .measure-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+        @media(min-width:500px) { .measure-grid { display:grid; grid-template-columns:repeat(4,1fr); } }
+        .measure-card { background:var(--bg-card); border-radius:12px; padding:12px; text-align:center; }
+        .measure-card .icon { font-size:1.5rem; margin-bottom:5px; }
+        .measure-card input { width:100%; padding:8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--text); font-family:'Bebas Neue',sans-serif; font-size:1.3rem; text-align:center; margin:5px 0; }
+        .measure-card input:focus { outline:none; border-color:var(--accent); }
+        .measure-card .unit { font-size:0.7rem; color:var(--text3); }
+        .measure-card .change { font-size:0.7rem; margin-top:5px; }
+        .measure-card .change.up { color:var(--success); }
+        .measure-card .change.down { color:#ef4444; }
+        .measure-save { margin-top:15px; width:100%; padding:12px; background:var(--grad); border:none; border-radius:10px; color:#fff; font-family:'Outfit',sans-serif; font-size:0.9rem; font-weight:500; cursor:pointer; }
+        .measure-save:active { transform:scale(0.98); }
+        .measure-history { margin-top:15px; }
+        .measure-history h4 { font-size:0.85rem; color:var(--text2); margin-bottom:10px; }
+        .measure-history-item { display:flex; justify-content:space-between; padding:8px 10px; background:rgba(255,255,255,0.03); border-radius:8px; margin-bottom:5px; font-size:0.8rem; }
+        .measure-history-item .date { color:var(--text3); }
+
+        /* Macro Tracking */
+        .macro-input { display:flex; align-items:center; gap:8px; margin-top:8px; }
+        .macro-input input { width:70px; padding:6px 8px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:6px; color:var(--text); font-family:'Outfit',sans-serif; font-size:0.85rem; text-align:center; }
+        .macro-input input:focus { outline:none; border-color:var(--accent); }
+        .macro-btn { padding:6px 12px; background:var(--grad); border:none; border-radius:6px; color:#fff; font-size:0.75rem; cursor:pointer; }
+        .macro-btn:active { transform:scale(0.95); }
+        .quick-adds { display:flex; flex-wrap:wrap; gap:5px; margin-top:8px; }
+        .quick-add { padding:4px 10px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:15px; font-size:0.7rem; color:var(--text2); cursor:pointer; }
+        .quick-add:active { background:var(--accent); color:#fff; }
+
+        /* Notes */
+        .notes-section { margin-top:20px; }
+        .notes-textarea { width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:10px; color:var(--text); font-family:'Outfit',sans-serif; font-size:0.85rem; resize:none; min-height:80px; }
+        .notes-textarea:focus { outline:none; border-color:var(--accent); }
+        .notes-textarea::placeholder { color:var(--text3); }
+
+        /* Streak */
+        .streak-card { background:linear-gradient(135deg,#f59e0b,#fbbf24); border-radius:16px; padding:15px; margin-bottom:20px; display:flex; align-items:center; gap:15px; }
+        .streak-fire { font-size:2.5rem; }
+        .streak-info h3 { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; color:#000; }
+        .streak-info p { font-size:0.8rem; color:rgba(0,0,0,0.7); }
+        .badges { display:flex; gap:8px; margin-left:auto; }
+        .badge-item { width:40px; height:40px; background:rgba(0,0,0,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
+        .badge-item.locked { opacity:0.4; filter:grayscale(1); }
+
+        /* Video Modal */
+        .video-btn { padding:4px 10px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.1); border-radius:15px; font-size:0.65rem; color:var(--text2); cursor:pointer; margin-left:auto; }
+        .video-btn:active { background:var(--accent); color:#fff; }
+        .video-modal { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1002; display:none; align-items:center; justify-content:center; padding:20px; }
+        .video-modal.show { display:flex; }
+        .video-content { background:var(--bg-card); border-radius:16px; padding:20px; max-width:500px; width:100%; text-align:center; }
+        .video-content h3 { font-family:'Bebas Neue',sans-serif; font-size:1.3rem; margin-bottom:15px; }
+        .video-placeholder { background:rgba(255,255,255,0.05); border-radius:12px; padding:40px; margin-bottom:15px; }
+        .video-placeholder .icon { font-size:3rem; margin-bottom:10px; }
+        .video-placeholder p { font-size:0.85rem; color:var(--text2); }
+        .video-tips { text-align:left; background:rgba(255,255,255,0.03); border-radius:10px; padding:12px; }
+        .video-tips h4 { font-size:0.85rem; color:var(--accent); margin-bottom:8px; }
+        .video-tips ul { padding-left:16px; }
+        .video-tips li { font-size:0.8rem; color:var(--text2); margin-bottom:4px; }
+        .video-close { margin-top:15px; padding:10px 30px; background:var(--grad); border:none; border-radius:10px; color:#fff; font-family:'Outfit',sans-serif; cursor:pointer; }
     </style>
 </head>
 <body>
@@ -231,6 +313,21 @@
         <div class="stat"><div class="icon">🥩</div><div class="val">120g</div><div class="lbl">Protein</div></div>
         <div class="stat"><div class="icon">💧</div><div class="val">3.5L</div><div class="lbl">Su</div></div>
         <div class="stat"><div class="icon">📅</div><div class="val" id="daycount">0</div><div class="lbl">Gün</div></div>
+    </div>
+
+    <!-- Streak Card -->
+    <div class="streak-card" id="streakCard">
+        <div class="streak-fire">🔥</div>
+        <div class="streak-info">
+            <h3><span id="streakCount">0</span> GÜN SERİ!</h3>
+            <p>Devam et, bırakma!</p>
+        </div>
+        <div class="badges">
+            <div class="badge-item" id="badge7" title="7 Gün">🥉</div>
+            <div class="badge-item locked" id="badge14" title="14 Gün">🥈</div>
+            <div class="badge-item locked" id="badge30" title="30 Gün">🥇</div>
+            <div class="badge-item locked" id="badge56" title="56 Gün">🏆</div>
+        </div>
     </div>
 
     <div class="water">
@@ -317,10 +414,78 @@
         <div class="section">
             <h3 class="sectitle">🍽️ Günlük Beslenme</h3>
             <div class="nutgrid">
-                <div class="nutcard"><h4>🥩 Protein (120g)</h4><p class="desc">Kas inşası için şart!</p><div class="macrobar"><div class="macrofill protein" style="width:0%" id="protbar"></div></div><div class="macroinfo"><span id="protcur">0g</span><span>/ 120g</span></div><div class="foods"><span class="foodtag">🥚 Yumurta</span><span class="foodtag">🍗 Tavuk</span><span class="foodtag">🧀 Lor</span><span class="foodtag">🫘 Baklagil</span></div></div>
-                <div class="nutcard"><h4>🍚 Karbonhidrat</h4><p class="desc">Enerji ve hacim için!</p><div class="macrobar"><div class="macrofill carbs" style="width:0%" id="carbbar"></div></div><div class="macroinfo"><span id="carbcur">0g</span><span>/ 350g</span></div><div class="foods"><span class="foodtag">🥣 Yulaf</span><span class="foodtag">🍚 Pirinç</span><span class="foodtag">🍝 Makarna</span><span class="foodtag">🥔 Patates</span></div></div>
-                <div class="nutcard"><h4>💧 Su (3.5L)</h4><p class="desc">Susuz kas büyümez!</p><div class="macrobar"><div class="macrofill water" style="width:0%" id="watbar"></div></div><div class="macroinfo"><span id="watcur">0ml</span><span>/ 3500ml</span></div></div>
+                <div class="nutcard">
+                    <h4>🥩 Protein (120g)</h4>
+                    <p class="desc">Kas inşası için şart!</p>
+                    <div class="macrobar"><div class="macrofill protein" style="width:0%" id="protbar"></div></div>
+                    <div class="macroinfo"><span id="protcur">0g</span><span>/ 120g</span></div>
+                    <div class="macro-input">
+                        <input type="number" id="protInput" placeholder="0" min="0">
+                        <button class="macro-btn" onclick="addMacro('prot',120)">+ Ekle</button>
+                    </div>
+                    <div class="quick-adds">
+                        <span class="quick-add" onclick="quickAdd('prot',6)">🥚 +6g</span>
+                        <span class="quick-add" onclick="quickAdd('prot',25)">🍗 +25g</span>
+                        <span class="quick-add" onclick="quickAdd('prot',12)">🧀 +12g</span>
+                        <span class="quick-add" onclick="quickAdd('prot',30)">🥤 +30g</span>
+                    </div>
+                </div>
+                <div class="nutcard">
+                    <h4>🍚 Karbonhidrat (350g)</h4>
+                    <p class="desc">Enerji ve hacim için!</p>
+                    <div class="macrobar"><div class="macrofill carbs" style="width:0%" id="carbbar"></div></div>
+                    <div class="macroinfo"><span id="carbcur">0g</span><span>/ 350g</span></div>
+                    <div class="macro-input">
+                        <input type="number" id="carbInput" placeholder="0" min="0">
+                        <button class="macro-btn" onclick="addMacro('carb',350)">+ Ekle</button>
+                    </div>
+                    <div class="quick-adds">
+                        <span class="quick-add" onclick="quickAdd('carb',30)">🥣 +30g</span>
+                        <span class="quick-add" onclick="quickAdd('carb',45)">🍚 +45g</span>
+                        <span class="quick-add" onclick="quickAdd('carb',50)">🍝 +50g</span>
+                        <span class="quick-add" onclick="quickAdd('carb',35)">🥔 +35g</span>
+                    </div>
+                </div>
+                <div class="nutcard">
+                    <h4>💧 Su (3.5L)</h4>
+                    <p class="desc">Susuz kas büyümez!</p>
+                    <div class="macrobar"><div class="macrofill water" style="width:0%" id="watbar"></div></div>
+                    <div class="macroinfo"><span id="watcur">0ml</span><span>/ 3500ml</span></div>
+                </div>
             </div>
+        </div>
+
+        <!-- Vücut Ölçüleri -->
+        <div class="section">
+            <h3 class="sectitle">📏 Vücut Ölçüleri</h3>
+            <div class="measure-grid">
+                <div class="measure-card">
+                    <div class="icon">⚖️</div>
+                    <input type="number" id="measureWeight" placeholder="--" step="0.1">
+                    <div class="unit">kg</div>
+                    <div class="change" id="weightChange"></div>
+                </div>
+                <div class="measure-card">
+                    <div class="icon">💪</div>
+                    <input type="number" id="measureArm" placeholder="--" step="0.1">
+                    <div class="unit">Kol (cm)</div>
+                    <div class="change" id="armChange"></div>
+                </div>
+                <div class="measure-card">
+                    <div class="icon">👕</div>
+                    <input type="number" id="measureChest" placeholder="--" step="0.1">
+                    <div class="unit">Göğüs (cm)</div>
+                    <div class="change" id="chestChange"></div>
+                </div>
+                <div class="measure-card">
+                    <div class="icon">🩳</div>
+                    <input type="number" id="measureWaist" placeholder="--" step="0.1">
+                    <div class="unit">Bel (cm)</div>
+                    <div class="change" id="waistChange"></div>
+                </div>
+            </div>
+            <button class="measure-save" onclick="saveMeasurements()">📏 Ölçümleri Kaydet</button>
+            <div class="measure-history" id="measureHistory"></div>
         </div>
         <div class="section">
             <h3 class="sectitle">💊 Supplement</h3>
@@ -345,6 +510,10 @@
                 <div class="aescard"><div class="emoji">👕</div><h4>ÜST GÖĞÜS</h4><p>Tişörtten belli!</p></div>
                 <div class="aescard"><div class="emoji">💪</div><h4>BICEPS</h4><p>Kalın kollar!</p></div>
             </div>
+        </div>
+        <div class="notes-section">
+            <h3 class="sectitle">📝 Günlük Notlar</h3>
+            <textarea class="notes-textarea" id="dailyNotes" placeholder="Bugün nasıl hissettin? Antrenman nasıldı? Yorgunluk, motivasyon, özel durumlar..."></textarea>
         </div>
     </section>
 
@@ -372,6 +541,38 @@
     <footer class="footer">Fatih'in Dönüşüm Programı</footer>
 
     <div class="toast" id="toast"><span>✅</span><span id="toastmsg">Harika!</span></div>
+
+    <!-- Timer Overlay -->
+    <div class="timer-overlay" id="timerOverlay">
+        <div class="timer-label">Set Arası Dinlenme</div>
+        <div class="timer-display" id="timerDisplay">60</div>
+        <div class="timer-presets">
+            <button class="timer-preset" onclick="setTimer(30)">30s</button>
+            <button class="timer-preset" onclick="setTimer(60)">60s</button>
+            <button class="timer-preset" onclick="setTimer(90)">90s</button>
+            <button class="timer-preset" onclick="setTimer(120)">120s</button>
+        </div>
+        <div class="timer-buttons">
+            <button class="timer-btn secondary" onclick="closeTimer()">Kapat</button>
+            <button class="timer-btn primary" id="timerStartBtn" onclick="toggleTimer()">Başlat</button>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-content">
+            <h3 id="videoTitle">Egzersiz</h3>
+            <div class="video-placeholder">
+                <div class="icon">🎬</div>
+                <p>Form videosu için YouTube'da ara</p>
+            </div>
+            <div class="video-tips" id="videoTips">
+                <h4>💡 Önemli Noktalar</h4>
+                <ul id="videoTipsList"></ul>
+            </div>
+            <button class="video-close" onclick="closeVideo()">Kapat</button>
+        </div>
+    </div>
 
     <!-- Settings Modal -->
     <div class="modal-overlay" id="settingsModal">
@@ -834,6 +1035,438 @@
                 };
             });
         }
+
+        // ========== MACRO TRACKING ==========
+        let macros = { prot: 0, carb: 0 };
+
+        function initMacros() {
+            const saved = S.get('fm_' + today());
+            if (saved) {
+                try {
+                    macros = JSON.parse(saved);
+                    updateMacroUI();
+                } catch(e) {}
+            }
+        }
+
+        function addMacro(type, max) {
+            const input = document.getElementById(type + 'Input');
+            const val = parseInt(input.value) || 0;
+            if (val > 0) {
+                macros[type] = Math.min((macros[type] || 0) + val, max * 2);
+                input.value = '';
+                saveMacros();
+                updateMacroUI();
+                if (macros[type] >= max) toast(type === 'prot' ? '🥩 Protein hedefi tamam!' : '🍚 Karb hedefi tamam!');
+            }
+        }
+
+        function quickAdd(type, amount) {
+            const max = type === 'prot' ? 120 : 350;
+            macros[type] = Math.min((macros[type] || 0) + amount, max * 2);
+            saveMacros();
+            updateMacroUI();
+            toast(`+${amount}g eklendi!`);
+        }
+
+        function saveMacros() {
+            S.set('fm_' + today(), JSON.stringify(macros));
+        }
+
+        function updateMacroUI() {
+            const protMax = 120, carbMax = 350;
+            document.getElementById('protcur').textContent = macros.prot + 'g';
+            document.getElementById('carbcur').textContent = macros.carb + 'g';
+            document.getElementById('protbar').style.width = Math.min(macros.prot / protMax * 100, 100) + '%';
+            document.getElementById('carbbar').style.width = Math.min(macros.carb / carbMax * 100, 100) + '%';
+        }
+
+        // ========== MEASUREMENTS ==========
+        function saveMeasurements() {
+            const weight = document.getElementById('measureWeight').value;
+            const arm = document.getElementById('measureArm').value;
+            const chest = document.getElementById('measureChest').value;
+            const waist = document.getElementById('measureWaist').value;
+
+            if (!weight && !arm && !chest && !waist) {
+                toast('⚠️ En az bir ölçüm gir!');
+                return;
+            }
+
+            const measurements = { weight, arm, chest, waist, date: today() };
+            let history = JSON.parse(S.get('f_measurements') || '[]');
+
+            // Bugün zaten kayıt varsa güncelle
+            const todayIndex = history.findIndex(m => m.date === today());
+            if (todayIndex >= 0) {
+                history[todayIndex] = measurements;
+            } else {
+                history.push(measurements);
+            }
+
+            // Son 10 kayıt tut
+            if (history.length > 10) history = history.slice(-10);
+
+            S.set('f_measurements', JSON.stringify(history));
+            toast('📏 Ölçümler kaydedildi!');
+            renderMeasureHistory();
+        }
+
+        function renderMeasureHistory() {
+            const history = JSON.parse(S.get('f_measurements') || '[]');
+            const container = document.getElementById('measureHistory');
+
+            if (history.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            // İlk ve son kayıtlar arasındaki farkları hesapla
+            const first = history[0];
+            const last = history[history.length - 1];
+
+            ['weight', 'arm', 'chest', 'waist'].forEach(key => {
+                const changeEl = document.getElementById(key + 'Change');
+                if (changeEl && first[key] && last[key]) {
+                    const diff = (parseFloat(last[key]) - parseFloat(first[key])).toFixed(1);
+                    if (diff > 0) {
+                        changeEl.textContent = `+${diff}`;
+                        changeEl.className = 'change ' + (key === 'waist' ? 'down' : 'up');
+                    } else if (diff < 0) {
+                        changeEl.textContent = diff;
+                        changeEl.className = 'change ' + (key === 'waist' ? 'up' : 'down');
+                    } else {
+                        changeEl.textContent = '';
+                    }
+                }
+            });
+
+            // Son 5 kaydı göster
+            const recent = history.slice(-5).reverse();
+            container.innerHTML = `
+                <h4>📊 Son Kayıtlar</h4>
+                ${recent.map(m => `
+                    <div class="measure-history-item">
+                        <span class="date">${formatMeasureDate(m.date)}</span>
+                        <span>${m.weight ? m.weight + 'kg' : '-'} | ${m.arm ? m.arm + 'cm' : '-'} | ${m.chest ? m.chest + 'cm' : '-'} | ${m.waist ? m.waist + 'cm' : '-'}</span>
+                    </div>
+                `).join('')}
+            `;
+
+            // Son kaydı inputlara yükle
+            if (last) {
+                if (last.weight) document.getElementById('measureWeight').placeholder = last.weight;
+                if (last.arm) document.getElementById('measureArm').placeholder = last.arm;
+                if (last.chest) document.getElementById('measureChest').placeholder = last.chest;
+                if (last.waist) document.getElementById('measureWaist').placeholder = last.waist;
+            }
+        }
+
+        function formatMeasureDate(dateStr) {
+            const d = new Date(dateStr);
+            return `${d.getDate()} ${monthNames[d.getMonth()]}`;
+        }
+
+        // ========== TIMER ==========
+        let timerSeconds = 60;
+        let timerInterval = null;
+        let timerRunning = false;
+
+        function openTimer() {
+            document.getElementById('timerOverlay').classList.add('show');
+            timerSeconds = 60;
+            updateTimerDisplay();
+        }
+
+        function closeTimer() {
+            document.getElementById('timerOverlay').classList.remove('show');
+            stopTimer();
+        }
+
+        function setTimer(seconds) {
+            timerSeconds = seconds;
+            updateTimerDisplay();
+            stopTimer();
+        }
+
+        function toggleTimer() {
+            if (timerRunning) {
+                stopTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            timerRunning = true;
+            document.getElementById('timerStartBtn').textContent = 'Durdur';
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                updateTimerDisplay();
+                if (timerSeconds <= 0) {
+                    stopTimer();
+                    timerComplete();
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            timerRunning = false;
+            document.getElementById('timerStartBtn').textContent = 'Başlat';
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('timerDisplay').textContent = timerSeconds;
+        }
+
+        function timerComplete() {
+            toast('⏰ Süre doldu! Sonraki sete geç!');
+            // Titreşim
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        }
+
+        // ========== VIDEO TIPS ==========
+        const exerciseTips = {
+            'Dumbbell Floor Press': ['Sırtını yere yapıştır', 'Dirsekler 45° açıda', 'Kontrollü indir'],
+            'Dumbbell Fly': ['Kolları hafif bükük tut', 'Göğsü sıkıştır', 'Yavaş indir'],
+            'Shoulder Press': ['Sırtı dik tut', 'Kolları tam uzat', 'Core sıkı'],
+            'Z-Bar Skullcrusher': ['Dirsekleri sabit tut', 'Alına doğru indir', 'Tricepsi hisset'],
+            'Lateral Raise': ['Hafif öne eğil', 'Dirsekler hafif bükük', 'Kontrollü kaldır'],
+            'Dumbbell Row': ['Sırtı düz tut', 'Kürek kemiğini sıkıştır', 'Dirsek yukarı'],
+            'Z-Bar Bent Row': ['45° eğil', 'Göbeğe çek', 'Omuzları aşağı'],
+            'Z-Bar Biceps Curl': ['Dirsekleri sabitle', 'Sırtı kullanma', 'Tepe noktasında sık'],
+            'Hammer Curl': ['Avuçlar birbirine baksın', 'Yavaş indir', 'Forearm çalışır'],
+            'Rear Delt Fly': ['Eğilerek yap', 'Kollar düz', 'Arka omuzu hisset'],
+            'Goblet Squat': ['Göğüste tut', 'Dizler dışa', 'Derin in'],
+            'Dumbbell Lunges': ['Uzun adım at', 'Arka diz yere', 'Dik dur'],
+            'Romanian Deadlift': ['Dizleri hafif bük', 'Kalçayı geriye it', 'Sırt düz'],
+            'Calf Raise': ['Tepede bekle', 'Tam aşağı in', 'Yavaş yap'],
+            'Plank & Leg Raise': ['Core sıkı', 'Nefes al', 'Kalçayı düşürme'],
+            'Z-Bar Upright Row': ['Dirsekler yukarı', 'Çeneye çek', 'Omuzları kaldır'],
+            'Arnold Press': ['Döndürerek kaldır', 'Avuçlar yüze baksın', 'Tam uzat'],
+            'Close Grip Press': ['Dar tutuş', 'Tricepsi hisset', 'Dirsekler vücuda yakın'],
+            'Dumbbell Shrug': ['Ağır kilo', 'Kulaklara çek', 'Tepede bekle']
+        };
+
+        function openVideo(exerciseName) {
+            document.getElementById('videoTitle').textContent = exerciseName;
+            const tips = exerciseTips[exerciseName] || ['Form videosunu izle', 'Kontrollü hareket et', 'Hedef kası hisset'];
+            document.getElementById('videoTipsList').innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+            document.getElementById('videoModal').classList.add('show');
+        }
+
+        function closeVideo() {
+            document.getElementById('videoModal').classList.remove('show');
+        }
+
+        // ========== NOTES ==========
+        function initNotes() {
+            const saved = S.get('fn_' + today());
+            if (saved) {
+                document.getElementById('dailyNotes').value = saved;
+            }
+            document.getElementById('dailyNotes').onblur = function() {
+                S.set('fn_' + today(), this.value);
+            };
+        }
+
+        // ========== STREAK ==========
+        function calculateStreak() {
+            let streak = 0;
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+
+            // Bugünden geriye doğru say
+            for (let i = 0; i < 100; i++) {
+                const checkDate = new Date(now);
+                checkDate.setDate(now.getDate() - i);
+                const key = 'fd_' + dateKey(checkDate);
+
+                if (S.get(key) === '1') {
+                    streak++;
+                } else if (i > 0) {
+                    // Bugün henüz tamamlanmamış olabilir, ama önceki günler için kır
+                    break;
+                }
+            }
+
+            return streak;
+        }
+
+        function updateStreak() {
+            const streak = calculateStreak();
+            document.getElementById('streakCount').textContent = streak;
+
+            // Rozetleri güncelle
+            const badges = [
+                { id: 'badge7', threshold: 7 },
+                { id: 'badge14', threshold: 14 },
+                { id: 'badge30', threshold: 30 },
+                { id: 'badge56', threshold: 56 }
+            ];
+
+            badges.forEach(badge => {
+                const el = document.getElementById(badge.id);
+                if (el) {
+                    if (streak >= badge.threshold) {
+                        el.classList.remove('locked');
+                    } else {
+                        el.classList.add('locked');
+                    }
+                }
+            });
+
+            // 0 seri ise kartı gizle
+            const streakCard = document.getElementById('streakCard');
+            if (streak === 0) {
+                streakCard.style.display = 'none';
+            } else {
+                streakCard.style.display = 'flex';
+            }
+        }
+
+        // ========== WEIGHT TRACKING ==========
+        function initWeightTracking() {
+            document.querySelectorAll('.excard').forEach((card, index) => {
+                const settrack = card.querySelector('.settrack');
+                if (!settrack) return;
+
+                // Weight input ekle
+                const weightDiv = document.createElement('div');
+                weightDiv.className = 'weight-input';
+                weightDiv.innerHTML = `
+                    <label>Ağırlık:</label>
+                    <input type="number" class="ex-weight" data-ex="${index}" placeholder="--" step="0.5" min="0">
+                    <span>kg</span>
+                    <span class="weight-change" id="wc${index}"></span>
+                `;
+                settrack.after(weightDiv);
+
+                // Kayıtlı değeri yükle
+                const saved = S.get('few_' + index);
+                if (saved) {
+                    weightDiv.querySelector('input').placeholder = saved;
+                }
+
+                // Değişikliği kaydet
+                weightDiv.querySelector('input').onchange = function() {
+                    if (this.value) {
+                        const oldVal = parseFloat(S.get('few_' + index)) || 0;
+                        S.set('few_' + index, this.value);
+
+                        // Değişimi göster
+                        if (oldVal > 0) {
+                            const diff = (parseFloat(this.value) - oldVal).toFixed(1);
+                            const changeEl = document.getElementById('wc' + index);
+                            if (diff > 0) {
+                                changeEl.textContent = `+${diff}kg`;
+                                changeEl.className = 'weight-change up';
+                            } else if (diff < 0) {
+                                changeEl.textContent = `${diff}kg`;
+                                changeEl.className = 'weight-change down';
+                            }
+                        }
+                        toast('💪 Ağırlık kaydedildi!');
+                    }
+                };
+            });
+        }
+
+        // ========== VIDEO BUTTONS ==========
+        function initVideoButtons() {
+            document.querySelectorAll('.excard').forEach(card => {
+                const nameEl = card.querySelector('.exname > div');
+                if (!nameEl) return;
+
+                const exerciseName = nameEl.childNodes[0].textContent.trim();
+                const exhead = card.querySelector('.exhead');
+
+                const videoBtn = document.createElement('button');
+                videoBtn.className = 'video-btn';
+                videoBtn.textContent = '📹 Form';
+                videoBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    openVideo(exerciseName);
+                };
+                exhead.appendChild(videoBtn);
+            });
+        }
+
+        // ========== REST DAY CHECKLIST SAVE ==========
+        function initRestWithSave() {
+            const items = document.querySelectorAll('.restitem');
+
+            // Kayıtlı durumları yükle
+            const saved = S.get('frest_' + today());
+            if (saved) {
+                try {
+                    const checked = JSON.parse(saved);
+                    items.forEach((item, i) => {
+                        if (checked[i]) item.classList.add('checked');
+                    });
+                } catch(e) {}
+            }
+
+            // Click handler
+            items.forEach((r, i) => {
+                r.onclick = () => {
+                    r.classList.toggle('checked');
+
+                    // Kaydet
+                    const states = [];
+                    items.forEach(item => states.push(item.classList.contains('checked')));
+                    S.set('frest_' + today(), JSON.stringify(states));
+
+                    if (items.length === document.querySelectorAll('.restitem.checked').length) {
+                        toast('😴 Dinlenme günü tamam!');
+                    }
+                };
+            });
+        }
+
+        // ========== TIMER BUTTON ON SET COMPLETE ==========
+        function initSetsWithTimer() {
+            document.querySelectorAll('.setbtn').forEach(b => {
+                b.onclick = () => {
+                    b.classList.toggle('done');
+                    const c = b.closest('.excard');
+                    const all = c.querySelectorAll('.setbtn');
+                    const dn = c.querySelectorAll('.setbtn.done');
+
+                    if (all.length === dn.length) {
+                        c.classList.add('done');
+                        toast('💪 Hareket tamam!');
+                    } else {
+                        c.classList.remove('done');
+                        // Set tamamlandıysa timer aç
+                        if (b.classList.contains('done')) {
+                            openTimer();
+                        }
+                    }
+
+                    saveProgress();
+                    checkDayDone();
+                };
+            });
+        }
+
+        // Override initSets ve initRest
+        function initSets() { initSetsWithTimer(); }
+        function initRest() { initRestWithSave(); }
+
+        // ========== INIT ALL NEW FEATURES ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            initMacros();
+            initNotes();
+            initWeightTracking();
+            initVideoButtons();
+            renderMeasureHistory();
+            updateStreak();
+        });
     </script>
 </body>
 </html>
