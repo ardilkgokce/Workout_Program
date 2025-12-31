@@ -57,9 +57,12 @@
         
         .tabs { display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:15px; scrollbar-width:none; }
         .tabs::-webkit-scrollbar { display:none; }
-        .tab { padding:10px 14px; background:var(--bg-card); border:1px solid rgba(255,255,255,0.08); border-radius:10px; color:var(--text2); font-size:0.8rem; font-weight:500; cursor:pointer; white-space:nowrap; flex-shrink:0; font-family:'Outfit',sans-serif; }
+        .tab { padding:8px 12px; background:var(--bg-card); border:1px solid rgba(255,255,255,0.08); border-radius:10px; color:var(--text2); font-size:0.75rem; font-weight:500; cursor:pointer; white-space:nowrap; flex-shrink:0; font-family:'Outfit',sans-serif; display:flex; align-items:center; gap:4px; }
         .tab:active { transform:scale(0.95); }
         .tab.active { background:var(--grad); color:#fff; border-color:transparent; }
+        .tab .tab-icon { font-size:0.9rem; }
+        .tab.rest-tab { opacity:0.7; }
+        .tab.rest-tab.active { opacity:1; background:linear-gradient(135deg,#1e1e2e,#2a2a3a); }
         
         .day { display:none; }
         .day.active { display:block; animation:fadeIn 0.3s; }
@@ -287,6 +290,22 @@
         </div>
     </section>
 
+    <!-- Dinlenme Günü -->
+    <section class="day" id="rest">
+        <div class="rest">
+            <div class="icon">😴</div>
+            <h3 class="rest-title">DİNLENME GÜNÜ</h3>
+            <p>Kaslar dinlenirken büyür! Bol su, protein ve uyku.</p>
+            <div class="restlist">
+                <div class="restitem"><span class="chk">✓</span><span>3.5L su içtim</span></div>
+                <div class="restitem"><span class="chk">✓</span><span>120g protein aldım</span></div>
+                <div class="restitem"><span class="chk">✓</span><span>Creatine kullandım</span></div>
+                <div class="restitem"><span class="chk">✓</span><span>7+ saat uyudum</span></div>
+                <div class="restitem"><span class="chk">✓</span><span>Germe yaptım</span></div>
+            </div>
+        </div>
+    </section>
+
     <!-- Beslenme -->
     <section class="day" id="bes">
         <div class="section">
@@ -427,23 +446,32 @@
             const dayIndex = jsDay === 0 ? 6 : jsDay - 1; // 0=Pzt, 1=Salı, ... 6=Pazar
             const schedule = getWorkoutSchedule();
 
+            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+            document.querySelectorAll('.day').forEach(x=>x.classList.remove('active'));
+
             // Bugün antrenman günü mü?
             if (schedule[dayIndex]) {
                 const workout = schedule[dayIndex];
-                document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-                document.querySelectorAll('.day').forEach(x=>x.classList.remove('active'));
                 const tb = document.querySelector(`[data-day="${workout.id}"]`);
                 if(tb) {
                     tb.classList.add('active');
                     document.getElementById(workout.id)?.classList.add('active');
                     return;
                 }
+            } else {
+                // Dinlenme günü
+                const restTab = document.querySelector(`[data-restday="${dayIndex}"]`);
+                if (restTab) {
+                    restTab.classList.add('active');
+                    document.getElementById('rest')?.classList.add('active');
+                    // Başlığı güncelle
+                    const restTitle = document.querySelector('.rest-title');
+                    if (restTitle) {
+                        restTitle.textContent = `${fullDayNames[dayIndex].toUpperCase()} - DİNLENME`;
+                    }
+                    return;
+                }
             }
-            // Değilse ipuçları sekmesini aç
-            document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-            document.querySelectorAll('.day').forEach(x=>x.classList.remove('active'));
-            document.querySelector('[data-day="tip"]').classList.add('active');
-            document.getElementById('tip').classList.add('active');
         }
 
         function initSets(){document.querySelectorAll('.setbtn').forEach(b=>b.onclick=()=>{b.classList.toggle('done');const c=b.closest('.excard'),all=c.querySelectorAll('.setbtn'),dn=c.querySelectorAll('.setbtn.done');if(all.length===dn.length){c.classList.add('done');toast('💪 Hareket tamam!');}else c.classList.remove('done');saveProgress();checkDayDone();});}
@@ -696,35 +724,44 @@
 
         function applyWorkoutDays() {
             const tabsContainer = document.getElementById('tabs');
+            const schedule = getWorkoutSchedule();
 
             // Rebuild tabs
             tabsContainer.innerHTML = '';
 
-            // Add workout day tabs in order
-            selectedDays.forEach((dayIndex, i) => {
-                if (i >= workoutTypes.length) return;
-                const workout = workoutTypes[i];
-                const tabId = shortDayIds[dayIndex];
+            // Add all 7 days as tabs
+            for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
                 const dayName = fullDayNames[dayIndex];
-
                 const btn = document.createElement('button');
                 btn.className = 'tab';
-                btn.dataset.day = workout.id; // Use workout id instead of day id
-                btn.textContent = dayName;
-                tabsContainer.appendChild(btn);
 
-                // Update section header using data-workout attribute
-                const section = document.querySelector(`[data-workout="${workout.id}"]`);
-                if (section) {
-                    section.id = workout.id; // Set ID to workout type for tab linking
-                    const title = section.querySelector('.day-title');
-                    const sub = section.querySelector('.day-sub');
-                    const icon = section.querySelector('.day-icon');
-                    if (title) title.textContent = `${dayName.toUpperCase()} - ${workout.name.toUpperCase()}`;
-                    if (sub) sub.textContent = workout.desc;
-                    if (icon) icon.textContent = workout.icon;
+                if (schedule[dayIndex]) {
+                    // Antrenman günü
+                    const workout = schedule[dayIndex];
+                    btn.dataset.day = workout.id;
+                    btn.innerHTML = `<span class="tab-icon">${workout.icon}</span>${dayName}`;
+
+                    // Update section header
+                    const section = document.querySelector(`[data-workout="${workout.id}"]`);
+                    if (section) {
+                        section.id = workout.id;
+                        const title = section.querySelector('.day-title');
+                        const sub = section.querySelector('.day-sub');
+                        const icon = section.querySelector('.day-icon');
+                        if (title) title.textContent = `${dayName.toUpperCase()} - ${workout.name.toUpperCase()}`;
+                        if (sub) sub.textContent = workout.desc;
+                        if (icon) icon.textContent = workout.icon;
+                    }
+                } else {
+                    // Dinlenme günü
+                    btn.dataset.day = 'rest';
+                    btn.dataset.restday = dayIndex;
+                    btn.innerHTML = `<span class="tab-icon">😴</span>${dayName}`;
+                    btn.classList.add('rest-tab');
                 }
-            });
+
+                tabsContainer.appendChild(btn);
+            }
 
             // Add Beslenme and İpuçları tabs
             const besTab = document.createElement('button');
@@ -739,8 +776,30 @@
             tipTab.textContent = '💡 İpuçları';
             tabsContainer.appendChild(tipTab);
 
-            // Reinit tabs
-            initTabs();
+            // Reinit tabs with rest day title update
+            initTabsWithRest();
+        }
+
+        function initTabsWithRest() {
+            document.querySelectorAll('.tab').forEach(t => {
+                t.onclick = () => {
+                    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+                    t.classList.add('active');
+                    document.querySelectorAll('.day').forEach(d => d.classList.remove('active'));
+
+                    const targetId = t.dataset.day;
+                    document.getElementById(targetId)?.classList.add('active');
+
+                    // Dinlenme günü ise başlığı güncelle
+                    if (targetId === 'rest' && t.dataset.restday !== undefined) {
+                        const dayIndex = parseInt(t.dataset.restday);
+                        const restTitle = document.querySelector('.rest-title');
+                        if (restTitle) {
+                            restTitle.textContent = `${fullDayNames[dayIndex].toUpperCase()} - DİNLENME`;
+                        }
+                    }
+                };
+            });
         }
     </script>
 </body>
